@@ -3,15 +3,24 @@
 $telegram_token = "7648795693:AAE4pMeYZLDD-XeR0Jg9F0gnZEyuBSwCiBg";
 $chat_id = "-4622909638"; // Kanal veya kullanıcı chat ID
 
+// Form gönderildiğinde çalışacak işlemler
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Kullanıcıdan gelen mesajı al
+    // Kullanıcıdan gelen bilgileri al
+    $name = htmlspecialchars($_POST['name']);
+    $email = htmlspecialchars($_POST['email']);
     $message = htmlspecialchars($_POST['message']);
+
+    // Mesajın içeriğini düzenleyelim
+    $text = "Yeni bir mesaj var!\n\n";
+    $text .= "Ad: $name\n";
+    $text .= "E-posta: $email\n";
+    $text .= "Mesaj: $message\n";
 
     // Telegram API'ye mesaj gönderme
     $url = "https://api.telegram.org/bot$telegram_token/sendMessage";
     $data = [
         'chat_id' => $chat_id,
-        'text' => $message
+        'text' => $text
     ];
 
     // POST verilerini URL'ye gönder
@@ -63,9 +72,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             text-align: center;
             color: #333;
         }
-        textarea {
+        input, textarea {
             width: 100%;
-            height: 100px;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -93,10 +101,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="container">
-        <h2>Telegram'a Mesaj Gönder</h2>
+        <h2>Telegram Bot'a Mesaj Gönder</h2>
         
         <!-- Mesaj Gönderme Formu -->
         <form method="POST">
+            <input type="text" name="name" placeholder="Adınız" required><br>
+            <input type="email" name="email" placeholder="E-posta Adresiniz" required><br>
             <textarea name="message" placeholder="Mesajınızı buraya yazın..." required></textarea><br>
             <button type="submit">Gönder</button>
         </form>
